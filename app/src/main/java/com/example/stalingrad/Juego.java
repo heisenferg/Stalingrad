@@ -17,7 +17,7 @@ import android.view.View;
 
 public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
     private Bitmap bmpMapa;
-    private Bitmap mario;
+    private Bitmap missile;
     private SurfaceHolder holder;
     private BucleJuego bucle;
 
@@ -31,16 +31,16 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     // private int xMario=0, yMario=0;
     private int mapaH, mapaW;
     private int destMapaY;
-    private int estado_mario=0;
-    private int puntero_mario_sprite =0;
-    private int marioW, marioH;
+    private int estado_heli=0;
+    private int puntero_heli_sprite =0;
+    private int helicopteroW, helocopteroH;
     private int contador_Frames = 0;
-    private int yMario;
-    private float posicionMario[] = new float[2];
-    private float velocidadMario [] = new float[2];
+    private int yHelicoptero;
+    private float posicionHelicoptero[] = new float[2];
+    private float velocidadHelicoptero[] = new float[2];
 
     private float gravedad [] =new float[2];
-    private float posicionInicialMario[]= new float[2];
+    private float posicionInicialHelicptero[]= new float[2];
 
     private int tiempoCrucePantalla = 3;
     private float deltaT;
@@ -55,7 +55,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         holder.addCallback(this);
         Display mdisp = context.getWindowManager().getDefaultDisplay();
         bmpMapa = BitmapFactory.decodeResource(getResources(), R.drawable.fondo2);
-        mario = BitmapFactory.decodeResource(getResources(), R.drawable.missile);
+        missile = BitmapFactory.decodeResource(getResources(), R.drawable.missile);
 
         mapaH = bmpMapa.getHeight();
         mapaW = bmpMapa.getWidth();
@@ -67,8 +67,8 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         mdisp.getSize(mdispSize);
 
 
-        velocidadMario[x] = maxX/tiempoCrucePantalla;
-        velocidadMario[y] = 0;
+        velocidadHelicoptero[x] = maxX/tiempoCrucePantalla;
+        velocidadHelicoptero[y] = 0;
 
     }
 
@@ -88,27 +88,28 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         maxY = c.getHeight();
         holder.unlockCanvasAndPost(c);
 
-        marioW = mario.getWidth();
-        marioH = mario.getHeight();
+        helicopteroW = missile.getWidth();
+        helocopteroH = missile.getHeight();
         // creamos el game loop
 
 
-        posicionInicialMario[x] = maxX*0.1f;
+        posicionInicialHelicptero[x] =destMapaY ;
+
 
         destMapaY = (maxY-mapaH)/2;
 
         //  posicionMario[y] = destMapaY + marioH * 9/10;
 
-        posicionInicialMario[y]= destMapaY + (mapaH*9/10)-(marioH*2/3);
+        posicionInicialHelicptero[y]=  maxX*0.1f;
 
-        posicionMario[x]=posicionInicialMario[x];
-        posicionMario[y]=posicionInicialMario[y];
+        posicionHelicoptero[x]= posicionInicialHelicptero[x];
+        posicionHelicoptero[y]= posicionInicialHelicptero[y];
 
-        velocidadMario[x]= maxX/tiempoCrucePantalla;
-        velocidadMario[y]= -velocidadMario[x]*2;
+        velocidadHelicoptero[x]= maxX/tiempoCrucePantalla;
+        velocidadHelicoptero[y]= -velocidadHelicoptero[x]*2;
 
         gravedad[x] = 0f;
-        gravedad[y] = -velocidadMario[y]*2;
+        gravedad[y] = -velocidadHelicoptero[y]*2;
 
         // se crea la superficie, creamos el game loop
         bucle = new BucleJuego(getHolder(), this);
@@ -134,44 +135,44 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
         contadorFrames++;
         //Posición marioY
-        yMario = destMapaY+mapaH*9/10-mario.getHeight()*2/3;
-        puntero_mario_sprite = marioW/21*estado_mario;
+        yHelicoptero = destMapaY+mapaH*9/10- missile.getHeight()*2/3;
+        puntero_heli_sprite = helicopteroW/21* estado_heli;
         contadorFrames++;
 
 
 
         //Velocidad
-        posicionMario[x] = posicionMario[x] + deltaT * velocidadMario[x];
-        posicionMario[y] = posicionMario[y] + deltaT * velocidadMario[y];
+        posicionHelicoptero[x] = posicionHelicoptero[x] + deltaT * velocidadHelicoptero[x];
+        posicionHelicoptero[y] = posicionHelicoptero[y] + deltaT * velocidadHelicoptero[y];
 
 //Gravedad
-        velocidadMario[x] = velocidadMario[x] + deltaT*gravedad[x];
-        velocidadMario[y] = velocidadMario[y] + deltaT*gravedad[y];
+        velocidadHelicoptero[x] = velocidadHelicoptero[x] + deltaT*gravedad[x];
+        velocidadHelicoptero[y] = velocidadHelicoptero[y] + deltaT*gravedad[y];
 
-        estado_mario++;
+        estado_heli++;
 
         if (contadorFrames%3==0){
 
-            if (estado_mario>3){
-                estado_mario=0;
+            if (estado_heli >3){
+                estado_heli =0;
             }
         }
 
-        if (posicionMario[x] > maxX+(marioW/21) || posicionMario[x]<=0) {
-            velocidadMario[x] = velocidadMario[x] * -1;
+        if (posicionHelicoptero[x] > maxX+(helicopteroW/21) || posicionHelicoptero[x]<=0) {
+            velocidadHelicoptero[x] = velocidadHelicoptero[x] * -1;
         }
 
         //Rebote
-        if(posicionMario[y]>=posicionInicialMario[y]){
-            velocidadMario[y]= -(maxX/tiempoCrucePantalla)*2;
-            posicionMario[y] = posicionInicialMario[y];
+        if(posicionHelicoptero[y]>= posicionInicialHelicptero[y]){
+            velocidadHelicoptero[y]= -(maxX/tiempoCrucePantalla)*2;
+            posicionHelicoptero[y] = posicionInicialHelicptero[y];
 
         }
 
         if(salta){
             // bucle.ejecutandose=false;
-            velocidadMario[y]=-velocidadMario[x]*2;
-            gravedad[y]=-velocidadMario[y]*2;
+            velocidadHelicoptero[y]=-velocidadHelicoptero[x]*2;
+            gravedad[y]=-velocidadHelicoptero[y]*2;
             salta = false;
         }
 
@@ -199,8 +200,8 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
             //Dibujar muñeco
             //canvas.drawBitmap(mario, xMario, yMario, null);
             //Recortar muñeco
-            canvas.drawBitmap(mario, new Rect(puntero_mario_sprite,0,puntero_mario_sprite+marioW/21, marioH*2/3),
-                    new Rect( (int)posicionMario[x], yMario, (int) posicionMario[x]+marioW/21, destMapaY+mapaH*9/10), null);
+            canvas.drawBitmap(missile, new Rect(puntero_heli_sprite,0, puntero_heli_sprite +helicopteroW/21, helocopteroH *2/3),
+                    new Rect( (int) posicionHelicoptero[x], yHelicoptero, (int) posicionHelicoptero[x]+helicopteroW/21, destMapaY+mapaH*9/10), null);
 
             //dibujar un texto
             myPaint.setStyle(Paint.Style.FILL);
