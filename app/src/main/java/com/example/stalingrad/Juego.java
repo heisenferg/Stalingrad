@@ -28,10 +28,10 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     private int contadorFrames=0;
     private boolean hacia_abajo=true;
     private static final String TAG = Juego.class.getSimpleName();
-    // private int xMario=0, yMario=0;
+     private int xAvion =0, yMario=0;
     private int mapaH, mapaW;
     private int destMapaY;
-    private int estadoAvion =1;
+    private int estadoAvion =2;
     private int puntero_Avion_sprite =0;
     private int avionW, avionH;
     private int contador_Frames = 0;
@@ -74,8 +74,8 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         mdisp.getSize(mdispSize);
 
 
-        velocidadAvion[x] = maxX/tiempoCrucePantalla;
-        velocidadAvion[y] = 0;
+        velocidadAvion[x] = 0;
+        velocidadAvion[y] = maxY/tiempoCrucePantalla;
 
 
 
@@ -111,13 +111,13 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         //  posicionMario[y] = destMapaY + marioH * 9/10;
 
         //posicionInicialAvion[y]=  maxX*0.1f;
-        posicionInicialAvion[y]=  maxX / 2 - avion.getHeight()/2;
+        posicionInicialAvion[y]=  maxY / 2 - avion.getHeight()/2;
 
         posicionAvion[x]= posicionInicialAvion[x];
         posicionAvion[y]= posicionInicialAvion[y];
 
         velocidadAvion[x]= maxX/tiempoCrucePantalla;
-        velocidadAvion[y]= -velocidadAvion[x]*2;
+        velocidadAvion[y]= maxY/tiempoCrucePantalla;
 
 
         // se crea la superficie, creamos el game loop
@@ -141,13 +141,14 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     public void actualizar() {
 
         //Vector de velocidad
-        // xMario = xMario+mapaW/(bucle.MAX_FPS*3);
+         //yAvion = yAvion +mapaW/(bucle.MAX_FPS*5);
 
 
         contadorFrames++;
         //Posición avion
-        yAvion = maxY- avion.getHeight()/2;
-        puntero_Avion_sprite = avionW/6* estadoAvion;
+
+        yAvion = maxY*1/2- avion.getHeight()/1/5;
+        puntero_Avion_sprite = avionW/6 * estadoAvion;
 
         //Velocidad
         posicionAvion[x] = posicionAvion[x] + deltaT * velocidadAvion[x];
@@ -162,39 +163,41 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
         if (contadorFrames%3==0){
 
-            if (estadoAvion >3){
+            if (estadoAvion>3){
                 estadoAvion =1;
             }
         }
-/*
-        if (posicionAvion[x] > maxX+(avionW /21) || posicionAvion[x]<=0) {
-            velocidadAvion[x] = velocidadAvion[x] * -1;
+
+        if (posicionAvion[y] > maxY+(avionH/5) || posicionAvion[y]<=0) {
+            velocidadAvion[y] = velocidadAvion[y] * -1;
         }
-*/
-  /*      //Rebote
+
+      //Rebote
         if(posicionAvion[y]>= posicionInicialAvion[y]){
             velocidadAvion[y]= -(maxX/tiempoCrucePantalla)*2;
             posicionAvion[y] = posicionInicialAvion[y];
 
         }
-*/
-        if(salta){
+
+     /*   if(salta){
             // bucle.ejecutandose=false;
             velocidadAvion[y]=-velocidadAvion[x]*2;
             gravedad[y]=-velocidadAvion[y]*2;
             salta = false;
-        }
+        }*/
 
         for (int i=0; i<3; i++){
             if (controles[i].pulsado){
                 Log.d("Control: ", "Se ha pulsado " + controles[i].nombre);
             }
         }
+        yAvion = yAvion +mapaW/(bucle.MAX_FPS*3);
 
         if (controles[ARRIBA].pulsado){
-
+            posicionAvion[y] = posicionAvion[y] + deltaT * velocidadAvion[y];
         }
         if (controles[ABAJO].pulsado){
+            yAvion = yAvion + 40;
 
         }
         if (controles[DISPARO].pulsado){
@@ -225,9 +228,9 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
             //Dibujar muñeco
             //canvas.drawBitmap(mario, xMario, yMario, null);
-            //Recortar muñeco
-            canvas.drawBitmap(avion, new Rect(puntero_Avion_sprite,0, puntero_Avion_sprite + (avionW /6), avionH *1/5),
-                    new Rect( (int) posicionAvion[x], yAvion, (int) (avionW /6 ), destMapaY+mapaH*1/2), null);
+            //Recortar avión
+            canvas.drawBitmap(avion, new Rect(puntero_Avion_sprite, (int) posicionAvion[y], puntero_Avion_sprite + (avionH /5), avionH *1/5),
+                    new Rect( (int) posicionAvion[x], yAvion, (int) (avionW /6), destMapaY+mapaH*1/2), null);
 
             //dibujar un texto
             myPaint.setStyle(Paint.Style.FILL);
@@ -249,18 +252,18 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         //ARRIBA
         controles[ARRIBA]=new Control(getContext(),400,maxY/5*3);
         controles[ARRIBA].Cargar(R.drawable.arriba);
-        controles[ARRIBA].nombre="IZQUIERDA";
+        controles[ARRIBA].nombre="Arriba";
         //ABAJO
         controles[ABAJO]=new Control(getContext(),
                 controles[0].Ancho()+controles[0].xCoordenada+50,controles[0].yCoordenada);
         controles[ABAJO].Cargar(R.drawable.abajo);
-        controles[ABAJO].nombre="DERECHA";
+        controles[ABAJO].nombre="Abajo";
 
         //disparo
         aux=5.0f/7.0f*maxX; //en los 5/7 del ancho
         controles[DISPARO]=new Control(getContext(),aux,controles[0].yCoordenada);
         controles[DISPARO].Cargar(R.drawable.fuego);
-        controles[DISPARO].nombre="DISPARO";
+        controles[DISPARO].nombre="Disparo";
     }
 
 
