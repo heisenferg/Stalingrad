@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button start;
-    CargaJuego carga;
+    ImageButton naziflagButton;
+    ImageButton sovietflagButton;
     private Juego j;
+    public static int bando;
 
 
     @Override
@@ -23,13 +26,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         hideSystemUI();
-        start = findViewById(R.id.buttonStart);
-        start.setOnClickListener(new View.OnClickListener() {
+        naziflagButton = findViewById(R.id.naziButton);
+        sovietflagButton = findViewById(R.id.sovietButton);
+
+        naziflagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bando = 1;
+                Log.d("Bando MAin ", " es " + bando);
                 setContentView(j);
             }
         });
+
+        sovietflagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bando = 2;
+                setContentView(j);
+            }
+        });
+
     }
 
 
