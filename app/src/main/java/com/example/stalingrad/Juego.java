@@ -51,8 +51,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         holder = getHolder();
         holder.addCallback(this);
         Display mdisp = context.getWindowManager().getDefaultDisplay();
-        bmpMapa = BitmapFactory.decodeResource(getResources(), R.drawable.fondo2);
-
+        bmpMapa = BitmapFactory.decodeResource(getResources(), R.drawable.fondo);
             if (MainActivity.bando == 1){
                 avion = BitmapFactory.decodeResource(getResources(), R.drawable.ger2);
             } else {
@@ -96,7 +95,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         // creamos el game loop
 
 
-        posicionInicialAvion[x] = 200 ;
+        posicionInicialAvion[x] = maxY*1/5 ;
 
 
         destMapaY = (maxY-mapaH)/2;
@@ -104,7 +103,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         //  posicionMario[y] = destMapaY + marioH * 9/10;
 
         //posicionInicialAvion[y]=  maxX*0.1f;
-        posicionInicialAvion[y]=  maxY / 2 - avion.getHeight();
+        posicionInicialAvion[y]=  maxX / 2 - avion.getHeight()/2;
 
         posicionAvion[x]= posicionInicialAvion[x];
         posicionAvion[y]= posicionInicialAvion[y];
@@ -136,9 +135,9 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
 
         contadorFrames++;
-        //Posición marioY
-        yAvion = maxY- avion.getHeight()*1/2;
-        puntero_Avion_sprite = avionW /6* estadoAvion;
+        //Posición avion
+        yAvion = maxY- avion.getHeight()/2;
+        puntero_Avion_sprite = avionW/6* estadoAvion;
 
         //Velocidad
         posicionAvion[x] = posicionAvion[x] + deltaT * velocidadAvion[x];

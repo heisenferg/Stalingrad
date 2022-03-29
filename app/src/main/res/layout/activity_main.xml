@@ -7,15 +7,16 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="733dp"
-        android:layout_height="440dp"
+        android:id="@+id/imageView6"
+        android:layout_width="772dp"
+        android:layout_height="458dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.492"
-        app:srcCompat="@drawable/fondo" />
+        app:layout_constraintVertical_bias="0.512"
+        app:srcCompat="@drawable/fondoentrada" />
 
     <ImageButton
         android:id="@+id/naziButton"
@@ -23,10 +24,10 @@
         android:layout_height="68dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.176"
+        app:layout_constraintHorizontal_bias="0.201"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.577"
+        app:layout_constraintVertical_bias="0.53"
         app:srcCompat="@drawable/naziflag" />
 
     <ImageButton
@@ -35,18 +36,19 @@
         android:layout_height="67dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.759"
+        app:layout_constraintHorizontal_bias="0.76"
         app:layout_constraintStart_toEndOf="@+id/naziButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.572"
+        app:layout_constraintVertical_bias="0.531"
         app:srcCompat="@drawable/sovietflag" />
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="425dp"
-        android:layout_height="171dp"
+        android:layout_width="391dp"
+        android:layout_height="118dp"
         app:layout_constraintBottom_toTopOf="@+id/sovietButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
