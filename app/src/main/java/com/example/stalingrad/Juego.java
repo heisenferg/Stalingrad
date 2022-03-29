@@ -15,14 +15,14 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
     private Bitmap bmpMapa;
     private Bitmap avion;
     private SurfaceHolder holder;
     private BucleJuego bucle;
-
     private int x=0,y=1; //Coordenadas x e y para desplazar
-
     private int maxX=0;
     private int maxY=0;
     private int contadorFrames=0;
@@ -45,6 +45,12 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     private int tiempoCrucePantalla = 3;
     private float deltaT;
     private boolean salta = false;
+    private boolean hayToque=false;
+    private ArrayList<Toque> toques = new ArrayList<Toque>();
+    private Control[] controles = new Control[3];
+    private final int ARRIBA=0;
+    private final int ABAJO=1;
+    private final int DISPARO=2;
 
     public Juego(Activity context) {
         super(context);
@@ -58,7 +64,6 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
                 avion = BitmapFactory.decodeResource(getResources(), R.drawable.sov2);
         }
         Log.d("BANDO: " , " es " + MainActivity.bando);
-
         mapaH = bmpMapa.getHeight();
         mapaW = bmpMapa.getWidth();
 
@@ -72,7 +77,10 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         velocidadAvion[x] = maxX/tiempoCrucePantalla;
         velocidadAvion[y] = 0;
 
+
+
     }
+
 
 
     @Override
@@ -118,6 +126,8 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
         // Hacer la Vista focusable para que pueda capturar eventos
         setFocusable(true);
+
+        CargaControles();
 
         //comenzar el bucle
         bucle.start();
@@ -187,6 +197,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
             Paint myPaint = new Paint();
             myPaint.setStyle(Paint.Style.STROKE);
+            myPaint.setColor(Color.WHITE);
 
             //Toda el canvas en rojo
             canvas.drawColor(Color.RED);
@@ -207,8 +218,35 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
             myPaint.setTextSize(40);
             canvas.drawText("Frames ejecutados:"+contadorFrames, 600, 1000, myPaint);
 
+
+            //Dibujar controles
+            myPaint.setAlpha(200);
+            for (int i = 0; i<3; i++){
+                controles[i].Dibujar(canvas, myPaint);
+            }
         }
     }
+
+    public void CargaControles(){
+        float aux;
+
+        //flecha_izda
+        controles[ARRIBA]=new Control(getContext(),0,maxY/5*4);
+        controles[ARRIBA].Cargar( R.drawable.arriba);
+        controles[ARRIBA].nombre="IZQUIERDA";
+        //flecha_derecha
+        controles[ABAJO]=new Control(getContext(),
+                controles[0].Ancho()+controles[0].xCoordenada+5,controles[0].yCoordenada);
+        controles[ABAJO].Cargar(R.drawable.abajo);
+        controles[ABAJO].nombre="DERECHA";
+
+        //disparo
+        aux=5.0f/7.0f*maxX; //en los 5/7 del ancho
+        controles[DISPARO]=new Control(getContext(),aux,controles[0].yCoordenada);
+        controles[DISPARO].Cargar(R.drawable.fuego);
+        controles[DISPARO].nombre="DISPARO";
+    }
+
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
@@ -229,11 +267,51 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getActionMasked()){
-            case MotionEvent.ACTION_UP:
-                salta = true;
+        int index;
+        int x,y;
 
+        // Obtener el pointer asociado con la acción
+        index = event.getActionIndex();
+
+
+        x = (int) event.getX(index);
+        y = (int) event.getY(index);
+
+        switch(event.getActionMasked()){
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                hayToque=true;
+
+                synchronized(this) {
+                    toques.add(index, new Toque(index, x, y));
+                }
+
+                //se comprueba si se ha pulsado
+                for(int i=0;i<3;i++)
+                    controles[i].comprueba_Pulsado(x,y);
+                break;
+
+            case MotionEvent.ACTION_POINTER_UP:
+                synchronized(this) {
+                    toques.remove(index);
+                }
+
+                //se comprueba si se ha soltado el botón
+                for(int i=0;i<3;i++)
+                    controles[i].compruebaSoltado(toques);
+                break;
+
+            case MotionEvent.ACTION_UP:
+                synchronized(this) {
+                    toques.clear();
+                }
+                hayToque=false;
+                //se comprueba si se ha soltado el botón
+                for(int i=0;i<3;i++)
+                    controles[i].compruebaSoltado(toques);
+                break;
         }
+
         return true;
     }
 }
