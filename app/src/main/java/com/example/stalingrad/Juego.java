@@ -31,7 +31,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     // private int xMario=0, yMario=0;
     private int mapaH, mapaW;
     private int destMapaY;
-    private int estadoAvion =0;
+    private int estadoAvion =1;
     private int puntero_Avion_sprite =0;
     private int avionW, avionH;
     private int contador_Frames = 0;
@@ -139,9 +139,6 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         //Posición marioY
         yAvion = maxY- avion.getHeight()*1/2;
         puntero_Avion_sprite = avionW /6* estadoAvion;
-        contadorFrames++;
-
-
 
         //Velocidad
         posicionAvion[x] = posicionAvion[x] + deltaT * velocidadAvion[x];
@@ -151,12 +148,13 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         velocidadAvion[x] = 0;
         velocidadAvion[y] = velocidadAvion[y] + deltaT;
 
+
         estadoAvion++;
 
         if (contadorFrames%3==0){
 
             if (estadoAvion >3){
-                estadoAvion =0;
+                estadoAvion =1;
             }
         }
 /*
