@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -51,6 +52,8 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     private final int ARRIBA=0;
     private final int ABAJO=1;
     private final int DISPARO=2;
+    private int velocidadVertical;
+    private final float TIEMPO_RECORRIDO=4;
 
     public Juego(Activity context) {
         super(context);
@@ -147,7 +150,8 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         contadorFrames++;
         //Posición avion
 
-        yAvion = maxY*1/2- avion.getHeight()/1/5;
+        yAvion = maxY/2- avion.getHeight()/1/5;
+        velocidadVertical = (int) (maxY/TIEMPO_RECORRIDO/bucle.MAX_FPS);
         puntero_Avion_sprite = avionW/6 * estadoAvion;
 
         //Velocidad
@@ -194,7 +198,10 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         yAvion = yAvion +mapaW/(bucle.MAX_FPS*3);
 
         if (controles[ARRIBA].pulsado){
-            posicionAvion[y] = posicionAvion[y] + deltaT * velocidadAvion[y];
+            if(yAvion>0){
+                yAvion = yAvion - velocidadVertical;
+            }
+            //posicionAvion[y] = posicionAvion[y] + deltaT * velocidadAvion[y];
         }
         if (controles[ABAJO].pulsado){
             yAvion = yAvion + 40;
@@ -333,4 +340,6 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
         return true;
     }
+
+
 }
