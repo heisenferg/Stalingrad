@@ -185,6 +185,22 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
             salta = false;
         }
 
+        for (int i=0; i<3; i++){
+            if (controles[i].pulsado){
+                Log.d("Control: ", "Se ha pulsado " + controles[i].nombre);
+            }
+        }
+
+        if (controles[ARRIBA].pulsado){
+
+        }
+        if (controles[ABAJO].pulsado){
+
+        }
+        if (controles[DISPARO].pulsado){
+
+        }
+
 
     }
 
@@ -220,7 +236,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
 
 
             //Dibujar controles
-            myPaint.setAlpha(200);
+            myPaint.setAlpha(400);
             for (int i = 0; i<3; i++){
                 controles[i].Dibujar(canvas, myPaint);
             }
@@ -230,13 +246,13 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
     public void CargaControles(){
         float aux;
 
-        //flecha_izda
-        controles[ARRIBA]=new Control(getContext(),0,maxY/5*4);
-        controles[ARRIBA].Cargar( R.drawable.arriba);
+        //ARRIBA
+        controles[ARRIBA]=new Control(getContext(),400,maxY/5*4);
+        controles[ARRIBA].Cargar(R.drawable.arriba);
         controles[ARRIBA].nombre="IZQUIERDA";
-        //flecha_derecha
+        //ABAJO
         controles[ABAJO]=new Control(getContext(),
-                controles[0].Ancho()+controles[0].xCoordenada+5,controles[0].yCoordenada);
+                controles[0].Ancho()+controles[0].xCoordenada+50,controles[0].yCoordenada);
         controles[ABAJO].Cargar(R.drawable.abajo);
         controles[ABAJO].nombre="DERECHA";
 
