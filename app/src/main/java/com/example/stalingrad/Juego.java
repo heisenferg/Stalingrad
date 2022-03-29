@@ -247,7 +247,7 @@ public class Juego extends SurfaceView implements SurfaceHolder.Callback, View.O
         float aux;
 
         //ARRIBA
-        controles[ARRIBA]=new Control(getContext(),400,maxY/5*4);
+        controles[ARRIBA]=new Control(getContext(),400,maxY/5*3);
         controles[ARRIBA].Cargar(R.drawable.arriba);
         controles[ARRIBA].nombre="IZQUIERDA";
         //ABAJO
